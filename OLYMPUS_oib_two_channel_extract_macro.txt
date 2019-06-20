@@ -1,0 +1,39 @@
+// READ-ME: Make sure to go to (IN FIJI) PLUGINs -> Bio-Formats ->
+// Bio-Formats-Plugin-configuration-> Formats -> Olympus FV1000 (Your scope, i.e. Nikon)-> select "Windowless"
+
+
+input = getDirectory("Choose an input directory");
+output = getDirectory("Choose an output directory");
+processFolder(input);
+
+function processFolder(input) {
+	list = getFileList(input);
+	list = Array.sort(list);
+	for (i = 0; i < list.length; i++) {
+		if(File.isDirectory(input + File.separator + list[i]))
+			processFolder(input + File.separator + list[i]);
+		if(endsWith(list[i], ".oib"))
+			processFile(input, output, list[i]);
+	}
+}
+
+function processFile(inputFolder, output, file) {
+	open(inputFolder + file);
+	title = getTitle();
+
+	selectWindow(file +" - C=0");
+	saveAs("PNG", output + file + "_DAPI");
+
+	selectWindow(file +" - C=2");
+	saveAs("PNG", output + file + "_PKH");
+
+
+DAPI = file + "_DAPI.png";
+PKH = file + "_PKH.png";
+
+	run("Merge Channels...", "c1=["+DAPI+"] c3=["+PKH+"]  create keep");
+		saveAs("PNG", output + file + "_merge");
+
+	run("Close All");
+
+}
