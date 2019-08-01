@@ -24,14 +24,14 @@ function processFile(inputFolder, output, file) {
 	selectWindow(file +" - C=0");
 	saveAs("PNG", output + file + "_DAPI");
 
-	selectWindow(file +" - C=2");
-	saveAs("PNG", output + file + "_PKH");
+	selectWindow(file +" - C=1");
+	saveAs("PNG", output + file + "_F480");
 
 
 DAPI = file + "_DAPI.png";
-PKH = file + "_PKH.png";
+F480 = file + "_F480.png";
 
-	run("Merge Channels...", "c1=["+DAPI+"] c3=["+PKH+"]  create keep");
+	run("Merge Channels...", "c1=["+DAPI+"] c3=["+F480+"]  create keep");
 		saveAs("PNG", output + file + "_merge");
 
 	run("Close All");
