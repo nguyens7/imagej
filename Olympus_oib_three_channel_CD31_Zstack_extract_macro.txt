@@ -12,7 +12,7 @@ function processFolder(input) {
 	for (i = 0; i < list.length; i++) {
 		if(File.isDirectory(input + File.separator + list[i]))
 			processFolder(input + File.separator + list[i]);
-		if(endsWith(list[i], ".nd2"))
+		if(endsWith(list[i], ".oib"))
 			processFile(input, output, list[i]);
 	}
 }
@@ -29,33 +29,25 @@ function processFile(inputFolder, output, file) {
 
 	selectWindow(file +" - C=1");
 	run("Z Project...", "projection=[Max Intensity]");
-	saveAs("PNG", output + file + "_mGFP");
+	saveAs("PNG", output + file + "_CD31");
 
 
 	selectWindow(file +" - C=2");
 	run("Z Project...", "projection=[Max Intensity]");
-	saveAs("PNG", output + file + "_mTomato");
+	saveAs("PNG", output + file + "_PKH26");
 
-
-	selectWindow(file +" - C=3");
-	run("Z Project...", "projection=[Max Intensity]");
-	saveAs("PNG", output + file + "_antiGFP");
 
 
 DAPI = file + "_DAPI.png";
-mGFP = file + "_mGFP.png";
-mTomato = file + "_mTomato.png";
-antiGFP = file + "_antiGFP.png";
+CD31 = file + "_CD31.png";
+PKH26 = file + "_PKH26.png";
 
-	run("Merge Channels...", "c1=["+DAPI+"] c2=["+mGFP+"] c3=["+mTomato+"] c7=["+antiGFP+"] create keep");
+
+	run("Merge Channels...", "c3=["+DAPI+"] c2=["+CD31+"] c1=["+PKH26+"]create keep");
 		saveAs("PNG", output + file + "_all_merge");
 
-	run("Merge Channels...", "c3=["+mTomato+"] c7=["+antiGFP+"] create keep");
-		saveAs("PNG", output + file + "_antiGFP_mTomato_merge");
-
-	run("Merge Channels...", "c2=["+mGFP+"] c3=["+mTomato+"] c7=["+antiGFP+"] create keep");
-		saveAs("PNG", output + file + "_mGFP_mTomato_antiGFP_merge");
-
+	run("Merge Channels...", "c3=["+PKH26+"] c2=["+CD31+"] create keep");
+		saveAs("PNG", output + file + "_CD31_PKH26_merge");
 
 	run("Close All");
 
